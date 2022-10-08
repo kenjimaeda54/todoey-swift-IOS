@@ -6,21 +6,28 @@
 //
 
 import UIKit
+import CoreData
 
 class TodoViewController: UITableViewController {
 	
 	//estou criando um novo arquivo no diretorio atual
 	//ideia e para salvar um array de objeto
-	let dataPathFile = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathExtension("TodoListTwo.plist")
+	//	let dataPathFile = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathExtension("TodoListTwo.plist")
 	
-	var itemArray: [ModelItem] = []
+	
 	var item: String?
-	let defaults = UserDefaults.standard
-	let decoder = JSONDecoder()
+	var itemArray: [Item] = []
+	var gesture  = false
+	
+	@IBOutlet var tapGesture: UITapGestureRecognizer!
+	@IBOutlet weak var searchBar: UISearchBar!
 	
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		searchBar.delegate = self
+		tapGesture.delegate = self
+		
 		// Do any additional setup after loading the view.
 		let appearance = UINavigationBarAppearance()
 		appearance.configureWithOpaqueBackground()
@@ -29,11 +36,16 @@ class TodoViewController: UITableViewController {
 		appearance.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
 		navigationController?.navigationBar.standardAppearance = appearance;
 		navigationController?.navigationBar.scrollEdgeAppearance = navigationController?.navigationBar.standardAppearance
+		
+		//saber onde esta sendo salvo os dados
+		//		print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+		//
+		loadData()
+		
 	}
 	
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
-		loadData()
 	}
 	
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -64,10 +76,11 @@ class TodoViewController: UITableViewController {
 		//para refletir na lista
 		//precisa ser dessa maneira para realizar mudanca direto no objeto
 		//se eu fizer let item = itemArray[indexPath.row] estarei criando apenas referenacia entao muda
-		itemArray[indexPath.row].done = !itemArray[indexPath.row].done
+		
+		//update
+		itemArray[indexPath.row].setValue(!itemArray[indexPath.row].done, forKey: "done")
 		
 		saveData()
-		tableView.reloadData()
 		
 	}
 	
@@ -77,10 +90,13 @@ class TodoViewController: UITableViewController {
 		
 		let add = UIAlertAction(title: "Add item", style: .default){[self](action) in
 			if let item = item {
-				let newItem = ModelItem(title: item,done: false)
+				let newItem = Item(context: context)
+				newItem.title = item
+				newItem.done = false
 				itemArray.append(newItem)
-				tableView.reloadData()
 				saveData()
+				tableView.reloadData()
+				
 			}
 		}
 		alert.addAction(add)
@@ -95,23 +111,41 @@ class TodoViewController: UITableViewController {
 		}
 		present(alert.self, animated:true)
 	}
-
-	//metodo abaixop para salvar e recuperar 
-	func loadData() {
-		let data = try? Data(contentsOf: dataPathFile!)
-		let decoder = PropertyListDecoder()
-		if let data = data,let modelItem = try? decoder.decode([ModelItem].self, from: data){
-			itemArray = modelItem
+	
+	//	//metodo abaixo para salvar e recuperar arquivos salvos diretos no celular
+	//	func loadData() {
+	//		let data = try? Data(contentsOf: dataPathFile!)
+	//		let decoder = PropertyListDecoder()
+	//		if let data = data,let modelItem = try? decoder.decode([ModelItem].self, from: data){
+	//			itemArray = modelItem
+	//			tableView.reloadData()
+	//		}
+	//	}
+	//
+	//	func saveData(){
+	//		let encoder = PropertyListEncoder()
+	//		let data =	 try? encoder.encode(itemArray)
+	//		if let item = data {
+	//			try!	item.write(to: dataPathFile!)
+	//		}
+	//	}
+	//
+	func saveData() {
+		do {
+			try context.save()
 			tableView.reloadData()
+		}catch {
+			print(error.localizedDescription)
 		}
 	}
 	
-	func saveData(){
-		let encoder = PropertyListEncoder()
-		let data =	 try? encoder.encode(itemArray)
-		if let item = data {
-			try!	item.write(to: dataPathFile!)
+	func loadData(_ request:  NSFetchRequest<Item> = Item.fetchRequest() ) {
+		do {
+			itemArray = 	try context.fetch(request)
+		}catch {
+			print(error.localizedDescription)
 		}
+		tableView.reloadData()
 	}
 	
 }
@@ -125,3 +159,36 @@ extension TodoViewController:UITextFieldDelegate  {
 }
 
 
+
+//MARK: - UISearchBarDelegate
+extension TodoViewController: UISearchBarDelegate {
+	
+	//cheset preciates
+	//https://academy.realm.io/posts/nspredicate-cheatsheet/
+	func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+		
+		gesture = true
+		let request: NSFetchRequest<Item> = Item.fetchRequest()
+		if let text = searchBar.text,!text.isEmpty{
+			request.predicate = NSPredicate(format: "title contains[c] %@",text)
+			request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+			loadData(request)
+			searchBar.resignFirstResponder()
+			searchBar.text = ""
+		}
+		gesture = false
+	}
+	
+}
+
+//esta logica e para fechar o teclado assim que clicar na table view
+//de uma olhada no ib se a referencia do tap esta no tableview
+//caso nao esteja e so arrastar
+//MARK: -    UIGestureRecognizerDelegate
+extension TodoViewController:  UIGestureRecognizerDelegate {
+	func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+		searchBar.resignFirstResponder()
+		return gesture
+	}
+	
+}

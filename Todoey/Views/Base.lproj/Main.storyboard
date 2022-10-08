@@ -16,9 +16,19 @@
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <gestureRecognizers/>
+                        <searchBar key="tableHeaderView" contentMode="redraw" id="VzI-QA-aWL">
+                            <rect key="frame" x="0.0" y="0.0" width="390" height="44"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                            <gestureRecognizers/>
+                            <textInputTraits key="textInputTraits"/>
+                            <connections>
+                                <outlet property="delegate" destination="beI-9z-PWd" id="9Dx-Ny-aNe"/>
+                            </connections>
+                        </searchBar>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" textLabel="0ui-gn-Q6f" style="IBUITableViewCellStyleDefault" id="rlp-29-amw" customClass="TodoTableViewCell" customModule="Todoey" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="50" width="390" height="43.666667938232422"/>
+                                <rect key="frame" x="0.0" y="94" width="390" height="43.666667938232422"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="rlp-29-amw" id="KXl-8j-b1n">
                                     <rect key="frame" x="0.0" y="0.0" width="390" height="43.666667938232422"/>
@@ -38,6 +48,7 @@
                         <connections>
                             <outlet property="dataSource" destination="beI-9z-PWd" id="Oqu-pu-Qa6"/>
                             <outlet property="delegate" destination="beI-9z-PWd" id="s3R-MX-zLC"/>
+                            <outletCollection property="gestureRecognizers" destination="DER-VS-2fr" appends="YES" id="AqV-f1-Q0O"/>
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Todoey" largeTitleDisplayMode="always" id="ei4-0D-dNW">
@@ -48,8 +59,13 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="searchBar" destination="VzI-QA-aWL" id="gj9-m2-k4a"/>
+                        <outlet property="tapGesture" destination="DER-VS-2fr" id="ECy-Vd-sFw"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0oY-pL-she" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="DER-VS-2fr"/>
             </objects>
             <point key="canvasLocation" x="1673.8461538461538" y="-11.374407582938389"/>
         </scene>
