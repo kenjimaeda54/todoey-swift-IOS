@@ -11,7 +11,7 @@ class TodoViewController: UITableViewController {
 	
 	//estou criando um novo arquivo no diretorio atual
 	//ideia e para salvar um array de objeto
-	let dataFilepath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathExtension("TodoListTwo.plist")
+	let dataPathFile = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathExtension("TodoListTwo.plist")
 	
 	var itemArray: [ModelItem] = []
 	var item: String?
@@ -95,23 +95,22 @@ class TodoViewController: UITableViewController {
 		}
 		present(alert.self, animated:true)
 	}
-	
-	
-	func loadData () {
+
+	//metodo abaixop para salvar e recuperar 
+	func loadData() {
+		let data = try? Data(contentsOf: dataPathFile!)
 		let decoder = PropertyListDecoder()
-		let data = try? Data(contentsOf: dataFilepath!)
-		if let data = data, let modelItem = try? decoder.decode([ModelItem].self, from: data) {
-			  itemArray = modelItem
-			  tableView.reloadData()
+		if let data = data,let modelItem = try? decoder.decode([ModelItem].self, from: data){
+			itemArray = modelItem
+			tableView.reloadData()
 		}
-		
 	}
 	
-	func saveData() {
+	func saveData(){
 		let encoder = PropertyListEncoder()
-		let data = try? encoder.encode(itemArray)
-		if let data = data,let url = dataFilepath {
-			try! data.write(to: url)
+		let data =	 try? encoder.encode(itemArray)
+		if let item = data {
+			try!	item.write(to: dataPathFile!)
 		}
 	}
 	
