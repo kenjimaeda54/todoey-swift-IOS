@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		81E5539C28F2F011003DE763 /* CategoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E5539B28F2F011003DE763 /* CategoryTableViewController.swift */; };
 		81F30E2F28F1EEA7009A01F3 /* ItemModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 81F30E2D28F1EEA7009A01F3 /* ItemModel.xcdatamodeld */; };
 		81F30E3128F1F544009A01F3 /* ViewControllerPlussAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F30E3028F1F544009A01F3 /* ViewControllerPlussAppDelegate.swift */; };
 		81F5E13228F0C4C500CD6142 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F5E13128F0C4C500CD6142 /* AppDelegate.swift */; };
@@ -18,6 +19,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		81E5539B28F2F011003DE763 /* CategoryTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTableViewController.swift; sourceTree = "<group>"; };
 		81F30E2E28F1EEA7009A01F3 /* ItemModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ItemModel.xcdatamodel; sourceTree = "<group>"; };
 		81F30E3028F1F544009A01F3 /* ViewControllerPlussAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerPlussAppDelegate.swift; sourceTree = "<group>"; };
 		81F5E12E28F0C4C500CD6142 /* Todoey.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Todoey.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -52,6 +54,7 @@
 		81F30E2A28F19C29009A01F3 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				81E5539B28F2F011003DE763 /* CategoryTableViewController.swift */,
 				81F5E13528F0C4C500CD6142 /* TodoViewController.swift */,
 				81F30E3028F1F544009A01F3 /* ViewControllerPlussAppDelegate.swift */,
 			);
@@ -181,6 +184,7 @@
 				81F5E13228F0C4C500CD6142 /* AppDelegate.swift in Sources */,
 				81F30E2F28F1EEA7009A01F3 /* ItemModel.xcdatamodeld in Sources */,
 				81F5E13428F0C4C500CD6142 /* SceneDelegate.swift in Sources */,
+				81E5539C28F2F011003DE763 /* CategoryTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

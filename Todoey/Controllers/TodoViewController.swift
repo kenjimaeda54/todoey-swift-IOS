@@ -28,15 +28,6 @@ class TodoViewController: UITableViewController {
 		searchBar.delegate = self
 		tapGesture.delegate = self
 		
-		// Do any additional setup after loading the view.
-		let appearance = UINavigationBarAppearance()
-		appearance.configureWithOpaqueBackground()
-		appearance.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
-		appearance.backgroundColor = UIColor(named: "AppBar")
-		appearance.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
-		navigationController?.navigationBar.standardAppearance = appearance;
-		navigationController?.navigationBar.scrollEdgeAppearance = navigationController?.navigationBar.standardAppearance
-		
 		//saber onde esta sendo salvo os dados
 		//		print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
 		//
@@ -165,6 +156,7 @@ extension TodoViewController: UISearchBarDelegate {
 	
 	//cheset preciates
 	//https://academy.realm.io/posts/nspredicate-cheatsheet/
+	//metodo acionado ao clicar no butao de buscar do keyboard
 	func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
 		
 		gesture = true
@@ -179,6 +171,23 @@ extension TodoViewController: UISearchBarDelegate {
 		gesture = false
 	}
 	
+	func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+		
+		if searchBar.text?.count == 0 {
+			loadData()
+			
+			//precisei colocar esse codigon na main
+			//estava sendo executado em outra tread
+			//entao teclado nao fechava
+			DispatchQueue.main.async {
+				searchBar.resignFirstResponder()
+				
+			}
+			
+		}
+		
+	}
+	
 }
 
 //esta logica e para fechar o teclado assim que clicar na table view
@@ -186,6 +195,7 @@ extension TodoViewController: UISearchBarDelegate {
 //caso nao esteja e so arrastar
 //MARK: -    UIGestureRecognizerDelegate
 extension TodoViewController:  UIGestureRecognizerDelegate {
+	
 	func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
 		searchBar.resignFirstResponder()
 		return gesture
