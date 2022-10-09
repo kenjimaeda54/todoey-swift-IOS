@@ -18,6 +18,12 @@ class TodoViewController: UITableViewController {
 	var item: String?
 	var itemArray: [Item] = []
 	var gesture  = false
+	//didSet fica observando a variavel
+	var selectedCategory: Category? {
+		didSet {
+			 loadData()
+		}
+	}
 	
 	@IBOutlet var tapGesture: UITapGestureRecognizer!
 	@IBOutlet weak var searchBar: UISearchBar!
@@ -84,6 +90,7 @@ class TodoViewController: UITableViewController {
 				let newItem = Item(context: context)
 				newItem.title = item
 				newItem.done = false
+				newItem.parentCategory = selectedCategory
 				itemArray.append(newItem)
 				saveData()
 				tableView.reloadData()
@@ -130,13 +137,23 @@ class TodoViewController: UITableViewController {
 		}
 	}
 	
-	func loadData(_ request:  NSFetchRequest<Item> = Item.fetchRequest() ) {
+	func loadData(_ request:  NSFetchRequest<Item> = Item.fetchRequest(),predicate: NSPredicate? = nil ) {
+		//parentCategory e o nome que esta nas relacoes
+		let predicateCategory = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
+		
+		if let predicate = predicate {
+			request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [predicateCategory,predicate])
+		}else {
+			request.predicate = predicateCategory
+		}
+		
+		
 		do {
 			itemArray = 	try context.fetch(request)
+			tableView.reloadData()
 		}catch {
 			print(error.localizedDescription)
 		}
-		tableView.reloadData()
 	}
 	
 }

@@ -34,6 +34,20 @@ class CategoryTableViewController: UITableViewController {
 		return categories.count
 	}
 	
+	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		performSegue(withIdentifier: "itemList", sender: nil)
+	}
+	
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		let vc = segue.destination as! TodoViewController
+		let indexPath = tableView.indexPathForSelectedRow
+		
+		if let index = indexPath?.row {
+			vc.selectedCategory = categories[index]
+		}
+		
+	}
+	
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		
 		let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
